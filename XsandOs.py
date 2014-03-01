@@ -79,10 +79,34 @@ def getPlayerMove(board):
 def chooseRandomMoveFromList(board, movesList):
     # Returns a valid move from the passed list on the passed board.
     # Returns None if there is no valid move.
-    return None
+    #return None
+    possibleMoves =  []
+    for i in movesList:
+        if isSpaceFree(board, i):
+            possibleMoves.append(i)
+    
+    if len(possibleMoves) !=  0:
+        return random.choice(possibleMoves)
+    else:
+        return None
 
 def getComputerMove(board, computerLetter):
-    return getPlayerMove(board)
+    #given a board and the computer's letter, determine where to move and return that move
+    if computerLetter ==  'X':
+        playerLetter =  'O'
+    else:
+        playerLetter =  'X'
+    
+    #the algorithm for our Xs and Os AI
+    #First check can the computer win
+    for i in range(1, 10):
+        copy =  getBoardCopy(board)
+        if isSpaceFree(copy, i):
+            makeMove(copy,  computerLetter, i)
+            if isWinner(copy,  computerLetter):
+                return i
+        
+    return chooseRandomMoveFromList(board, [1, 2, 3, 4, 5, 6, 7, 8, 9])
 
 def isBoardFull(board):
     # Return True if every space on the board has been taken. Otherwise return False.

@@ -105,8 +105,23 @@ def getComputerMove(board, computerLetter):
             makeMove(copy,  computerLetter, i)
             if isWinner(copy,  computerLetter):
                 return i
+    #check if the player can win and then block him
+    for i in range(1, 10):
+        copy =  getBoardCopy(board)
+        if isSpaceFree(copy, i):
+            makeMove(copy, playerLetter,  i)
+            if isWinner(copy,  playerLetter):
+                return i
+    #check if we can get the middle space
+    if isSpaceFree(board, 5):
+        return 5
+    
+    #try to take the corners
+    move =  chooseRandomMoveFromList(board, [9,  7, 1, 3])
+    if move !=  None:
+        return move
         
-    return chooseRandomMoveFromList(board, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    return chooseRandomMoveFromList(board, [ 2, 4, 6, 8])
 
 def isBoardFull(board):
     # Return True if every space on the board has been taken. Otherwise return False.
@@ -117,57 +132,57 @@ def isBoardFull(board):
     return True
 
 
-
-print('Welcome to Xs and Os!')
-
-while True:
-    # Reset the board
-    theBoard = [' ']*10
-    playerLetter, computerLetter = inputPlayerLetter()
+if __name__ == "__main__":
+    print('Welcome to Xs and Os!')
     
-    turn = whoGoesFirst()
-    print 'The ' + turn + ' will go first.'
-    
-    gameIsPlaying = True
-    
-    while gameIsPlaying:
-        if turn == 'player':
-            #players turn
-            drawBoard(theBoard)
-            move = getPlayerMove(theBoard)
-            makeMove(theBoard, playerLetter, move)
-            
-            if isWinner(theBoard, playerLetter):
+    while True:
+        # Reset the board
+        theBoard = [' ']*10
+        playerLetter, computerLetter = inputPlayerLetter()
+        
+        turn = whoGoesFirst()
+        print 'The ' + turn + ' will go first.'
+        
+        gameIsPlaying = True
+        
+        while gameIsPlaying:
+            if turn == 'player':
+                #players turn
                 drawBoard(theBoard)
-                print 'Hooray! You have won'
-                gameIsPlaying = False
-            else:
-                if isBoardFull(theBoard):
+                move = getPlayerMove(theBoard)
+                makeMove(theBoard, playerLetter, move)
+                
+                if isWinner(theBoard, playerLetter):
                     drawBoard(theBoard)
-                    print 'The game is a tie'
-                    break
+                    print 'Hooray! You have won'
+                    gameIsPlaying = False
                 else:
-                    turn = 'computer'
-        else:
-            #computer's Turn
-            move = getComputerMove(theBoard, computerLetter)
-            makeMove(theBoard, computerLetter, move)
-            
-            #check to see if the computer won
-            if isWinner(theBoard, computerLetter):
-                drawBoard(theBoard)
-                print "The computer has won. Loser!!!"
-                gameIsPlaying = False
+                    if isBoardFull(theBoard):
+                        drawBoard(theBoard)
+                        print 'The game is a tie'
+                        break
+                    else:
+                        turn = 'computer'
             else:
-                if isBoardFull(theBoard):
+                #computer's Turn
+                move = getComputerMove(theBoard, computerLetter)
+                makeMove(theBoard, computerLetter, move)
+                
+                #check to see if the computer won
+                if isWinner(theBoard, computerLetter):
                     drawBoard(theBoard)
-                    print 'The game is a tie'
-                    break
+                    print "The computer has won. Loser!!!"
+                    gameIsPlaying = False
                 else:
-                    turn =   'player'          
-            
-
-    if not playAgain():
-        break
+                    if isBoardFull(theBoard):
+                        drawBoard(theBoard)
+                        print 'The game is a tie'
+                        break
+                    else:
+                        turn =   'player'          
+                
     
-    
+        if not playAgain():
+            break
+        
+        
